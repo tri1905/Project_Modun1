@@ -1,15 +1,17 @@
+# 1. Đọc dữ liệu (Lọc dấu phân tách ";" và ký tự khuyết "?")
+data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", dec = ".", na.strings = "?", stringsAsFactors = FALSE)
 
-# tiền xử lý số liệu
-# 1. Đọc dữ liệu (Lưu ý dấu phân tách ";" và ký tự khuyết "?")
-data <- read.csv2("household_power_consumption.txt", na.strings = "?", stringsAsFactors = FALSE)
-
-# 2. Lọc dữ liệu đúng 2 ngày theo yêu cầu của dự án trước để tăng tốc độ xử lý
-# Định dạng ngày trong file gốc lúc này đang là d/m/Y (ví dụ: 1/2/2007)
+# 2. Lọc dữ liệu đúng 2 ngày theo yêu cầu để tăng tốc độ xử lý
 data_subset <- subset(data, Date == "1/2/2007" | Date == "2/2/2007")
 
-# 3. Gộp và ép kiểu sang POSIXct (Thêm hàm as.POSIXct bọc ngoài strptime)
-data_subset$DateTime <- as.POSIXct(strptime(paste(data_subset$Date, data_subset$Time), 
-                                            format = "%d/%m/%Y %H:%M:%S"))
+# 3. Mở thiết bị vẽ PNG với kích thước chuẩn 480x480 pixel
+png("plot1.png", width = 480, height = 480)
 
-# 4. Mẹo ép hệ thống hiển thị Thứ bằng tiếng Anh (Bắt buộc để biểu đồ ra chữ Thu, Fri, Sat)
-Sys.setlocale("LC_TIME", "English")
+# 4. Vẽ biểu đồ Histogram (ép kiểu số để biểu đồ mượt và chuẩn)
+hist(as.numeric(data_subset$Global_active_power), 
+     col = "red", 
+     main = "Global Active Power", 
+     xlab = "Global Active Power (kilowatts)")
+
+# 5. Đóng thiết bị vẽ để lưu file ảnh
+dev.off()
